@@ -48,8 +48,16 @@ namespace Core
             Application.targetFrameRate = _targetFrameRate;
             Screen.sleepTimeout = SleepTimeout.SystemSetting;
 
-            var setup = _config.ToSetup();
             _storage = new JsonSaveStorage(SaveFileName);
+
+            // In WebGL builds the save file lives in an in-memory FS until pulled from
+            // IndexedDB, so loading must wait for that sync to finish first.
+            WebGLSaveSync.SyncFromIndexedDB(_ => InitializeGame());
+        }
+
+        private void InitializeGame()
+        {
+            var setup = _config.ToSetup();
             _offline = new OfflineEarnings(new SystemTimeProvider(), setup.OfflineCap);
 
             if (_useSave && _storage.TryLoad(out var state))

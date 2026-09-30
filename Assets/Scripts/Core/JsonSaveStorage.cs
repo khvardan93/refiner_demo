@@ -45,6 +45,7 @@ namespace Core
                 if (File.Exists(_path))
                     File.Delete(_path);
                 File.Move(_tempPath, _path);
+                WebGLSaveSync.SyncToIndexedDB();
             }
             catch (Exception e)
             {
@@ -56,6 +57,7 @@ namespace Core
         {
             if (File.Exists(_path)) File.Delete(_path);
             if (File.Exists(_tempPath)) File.Delete(_tempPath);
+            WebGLSaveSync.SyncToIndexedDB();
         }
     }
 }
